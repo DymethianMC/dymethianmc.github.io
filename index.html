@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Feel free to add any additional html elements in here as well -->
+    <title>DymethianMC</title>
+    <meta charset="UTF-8">
+    <meta name="description" content="This is what appears under your website title in Google/Bing.">
+    <meta name="keywords" content="These, are, the, keywords, seperated, by, commas, that, describe, the, content, on, your, website">
+    <meta name="author" content="WulfGamesYT">
+    <meta name="viewport" content="width=device-width, initial-scale=1">    
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Domine"/>
+    <link rel="stylesheet" href="css/mainpage.css?v=1531600586"/>    
+</head>
+<body>
+    <div class="wrapper">
+        <div class="content">
+            <div id="logo">
+                <a href="/"><img src="images/logo.png?v=1531600586"></img></a>
+            </div>
+            <div id="icons">
+                <a href="https://www.twitter.com/dymethian"><img src="images/news-icon.png?v=1531600586" width="190" height="245" alt="Icon 3"></img></a>
+                <a href="https://goo.gl/forms/EHjI3KKCnRuid2Im2"><img src="images/apply-icon.png?v=1531600586" width="190" height="245" alt="Icon 4"></img></a>
+                <a href="https://dymethianmc.buycraft.net"><img src="images/store-icon.png?v=1531600586" width="190" height="245" alt="Icon 2"></img></a>
+                <a href=""><img src="images/vote-icon.png?v=1531600586" width="190" height="245" alt="Icon 5"></img></a>
+            </div>    
+            <div id="serverip">
+                <h1></h1>
+                <br><a onClick="CopyIP();"><h3>DyMC.mygs.co</h3></a><p>(Click To Copy)</p>
+            </div>           
+            <div id="serverBoxOuter"></div>
+        </div>
+   </div>
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+   <script>$(document).ready(function() {
+    var onlineplayers = 0;
+    var maxplayers = 0;
+    var textToShow = "Currently %online%/%max% players online";
+    
+    xhr = new XMLHttpRequest();
+    var url = "https://use.gameapis.net/mc/query/players/DyMC.mygs.co";
+    xhr.open("GET", url, true);
+    xhr.onreadystatechange = function () { 
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            var json = JSON.parse(xhr.responseText);
+            if(json.status == false) { $("#serverip h1").text("Currently 0/0 players online"); return; }
+            
+            onlineplayers = commaSeparateNumber(json.players.online);
+            maxplayers = commaSeparateNumber(json.players.max);
+            $("#serverip h1").text(textToShow.replace("%online%", onlineplayers).toString().replace("%max%", maxplayers));
+
+            $("#serverBoxOuter").html("<input id=\"serverBoxIP\" style=\"background: transparent;opacity:0;outline:none;border:none;\" value=\"DyMC.mygs.co\">");
+            $("#serverip h1").fadeTo("medium", 1);
+        }
+    }
+    
+    xhr.send();
+});
+
+function commaSeparateNumber(val){
+    while (/(\d+)(\d{3})/.test(val.toString())){
+        val = val.toString().replace(/(\d+)(\d{3})/, "$1"+","+"$2");
+    }
+    return val;
+}
+
+function CopyIP() {    
+    var inp = document.getElementById("serverBoxIP");
+
+    if(inp && inp.select) {    
+        if($(inp).val() == "Copied!") return false;
+
+        inp.select();
+
+        try {
+            document.execCommand("copy");
+            inp.blur();
+            $("#serverip h3").html("Copied!");
+            setTimeout(function () {
+                $("#serverip h3").html("DyMC.mygs.co");        
+            }, 1800);
+        }
+        catch (err) {
+            alert("Please press Ctrl/Cmd+C to copy the server ip.");
+        }
+    }
+}</script></body>
+</html>
